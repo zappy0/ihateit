@@ -1,3 +1,41 @@
 pls let me try
 attempt 1
 almost there
+
+
+public static void parseNode(Node node,String parentPath){
+        String nodeName = node.getNodeName();
+        String currentPath = parentPath.isEmpty() ? "/" + nodeName : parentPath + "/" + nodeName;
+
+
+        if (node.hasAttributes()) {
+            NamedNodeMap attributes = node.getAttributes();
+            for (int i = 0; i < attributes.getLength(); i++) {
+                Node attribute = attributes.item(i);
+                System.out.println(currentPath + "[@" + attribute.getNodeName() + "='" + attribute.getNodeValue() + "']");
+            }
+        }
+
+   
+        NodeList childNodes = node.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node childNode = childNodes.item(i);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                parseNode(childNode, currentPath);
+            }
+        }
+    }
+
+    public static void parseXML(String filePath) throws ParserConfigurationException, IOException, SAXException {
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(filePath);
+
+        document.getDocumentElement().normalize();
+
+        Element root = document.getDocumentElement();
+
+        parseNode(root,"");
+
+    }
